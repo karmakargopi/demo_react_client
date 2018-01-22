@@ -1,9 +1,11 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
 
+    context: path.resolve(__dirname, 'src') + '/app',
     // entry point setting 
-    entry: path.resolve(__dirname, 'src') + '/app/index.js',
+    entry: ['./index.js'],
     
     // output setting 
     output :  { 
@@ -12,19 +14,34 @@ module.exports = {
         publicPath: '/app/'
     },
     module: {
-        loaders: [
+        loaders: [
             {
-                test:/\.js$/,
-                include: path.resolve(__dirname, 'src'),
+                test: /.js?$/,
                 loader: 'babel-loader',
+                exclude: /node_modules/,
                 query: {
-                    presets: ['react', 'es2015']
+                    presets: ['es2015', 'react']
                 }
             },
             {
-                test: /\.css$/,
-                loader: 'style-loader|css-loader'
+                test: /\.html$/,
+                loader: "file-loader?name=[name].[ext]",
+            },
+            {
+                test: /\.css$/, 
+                loader: "style-loader!css-loader" 
+            },
+            { 
+                test: /\.png$/, 
+                loader: "url-loader?limit=100000" 
+            },
+            { 
+                test: /\.jpg$/, 
+                loader: "file-loader" 
             }
         ]
-    }
+      },
+      devServer: {
+            historyApiFallback: true
+        }
 };
